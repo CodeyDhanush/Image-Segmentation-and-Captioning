@@ -4,7 +4,7 @@ import torch
 from ultralytics import YOLO
 from transformers import BlipProcessor, BlipForConditionalGeneration
 
-# ----------------------- Load Models ----------------------- #
+#Load Models
 @st.cache_resource
 def load_yolo():
     return YOLO("yolov8x-seg.pt")  # Load YOLOv8 segmentation model
@@ -18,7 +18,7 @@ def load_blip():
 yolo_model = load_yolo()
 blip_processor, blip_model = load_blip()
 
-# ----------------------- Streamlit UI ----------------------- #
+#Streamlit UI
 st.set_page_config(page_title="YOLOv8 + BLIP", layout="wide")
 st.title("Image Segmentation & Image Captioning - 18th group")
 st.write("Upload an image to **detect & segment objects** and generate a **caption** describing the scene.")
@@ -29,13 +29,13 @@ if uploaded_file is not None:
     # Load image
     image = Image.open(uploaded_file).convert("RGB")
 
-    # ------------------ YOLO Object Detection ------------------ #
+    #YOLO Object Detection
     with st.spinner("Running YOLOv8 segmentation..."):
         results = yolo_model(image)
         segmented_image = results[0].plot()  # Annotated image (numpy array)
         object_names = list(set(results[0].names[int(cls)] for cls in results[0].boxes.cls))
 
-    # ------------------ BLIP Captioning ------------------ #
+    #BLIP Captioning
     with st.spinner("Generating caption using BLIP..."):
         inputs = blip_processor(image, return_tensors="pt")
         with torch.no_grad():
@@ -52,3 +52,4 @@ if uploaded_file is not None:
     with col2:
         st.subheader("Segmentation Result :")
         st.image(segmented_image, use_container_width=True)
+
