@@ -4,7 +4,7 @@ import torch
 from ultralytics import YOLO
 from transformers import BlipProcessor, BlipForConditionalGeneration
 
-#Load Models
+#Load Models 
 @st.cache_resource
 def load_yolo():
     return YOLO("yolov8x-seg.pt")  # Load YOLOv8 segmentation model
